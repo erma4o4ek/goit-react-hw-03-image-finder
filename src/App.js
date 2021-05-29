@@ -7,6 +7,7 @@ import Modal from "./Modal/Modal";
 import Searchbar from "./Searchbar/Searchbar";
 import apiService from "./Service/apiService";
 import PropTypes from 'prop-types';
+import "./styles.css";
 
 class App extends Component {
   state = {
@@ -42,7 +43,7 @@ class App extends Component {
     apiService(options)
       .then(images => {
         this.setState((prevState) => ({
-          currentPage: prevState.page + 1,
+          currentPage: prevState.currentPage + 1,
           images: [...prevState.images, ...images],
         }));
       })
@@ -57,8 +58,8 @@ class App extends Component {
       });
   };
 
-  largeImage = (largeImageURL) => {
-    this.setState({ largeImageUrl:largeImageURL});
+  imageModal = url => {
+    this.setState({ largeImageUrl:url});
     this.toggleModal();
   };
 
@@ -76,13 +77,13 @@ class App extends Component {
       <Container>
         {error && <h1>Erorr! Try again</h1>}
         <Searchbar onSubmit={this.onChangeQuery} />
-        <ImageGallery images={images} imgClick={this.largeImage} />
+        <ImageGallery images={images} onClick={this.imageModal} />
 
         {isLoading && <Loader />}
         {loadMoreBtn && <Button onClick={this.fetchImages} />}
 
         {showModal && (
-          <Modal onClose={this.largeImage}>
+          <Modal showModal={this.toggleModal }>
             <img src={largeImageUrl} alt="" />
           </Modal>
         )}
